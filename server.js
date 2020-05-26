@@ -3,12 +3,13 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
 
+let port = 3000;
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
 
-mongoose.connect('mongodb+srv://Vaikehugo:<Minubella1>@cluster-wjtkt.azure.mongodb.net/test?retryWrites=true&w=majority/ShoppingListDB', {
- useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect('mongodb://localhost:27017/todolistDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
 //create item schema
 const itemSchema = {
@@ -32,9 +33,7 @@ app.get('/', (req, res)=>{
     }
     
     let day = today.toLocaleDateString("en-US", options);
-    //console.log(day);
 
-    //{} find all the items inside the collection
     Item.find({}, function(error, fetchedItems){
         console.log(fetchedItems);
         res.render('index', {
@@ -72,8 +71,6 @@ app.post('/delete', (req, res) => {
 });
 
 
-let port = 3000;
-
-app.listen(process.env.PORT || port, ()=>{
+app.listen(port, ()=>{
     console.log('Server is running on port '+ port);    
 })
